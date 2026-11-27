@@ -128,8 +128,8 @@ let n=3,ca=document.getElementById('cuentaAtras');ca.classList.remove('hidden');
 clearInterval(cuentaTimer);cuentaTimer=setInterval(()=>{n--;if(n<=0){clearInterval(cuentaTimer);ca.textContent='Mandando...';enviarFoto();}else{ca.textContent='Se manda sola en '+n+'...';}},1000);
 }
 function cancelarEnvio(){clearInterval(cuentaTimer);document.getElementById('cuentaAtras').classList.add('hidden');document.getElementById('preview').classList.add('hidden');document.getElementById('fotoAcciones').classList.add('hidden');openCam();}
-async function mandarFoto(){let id=Date.now().toString();fotoId=id;let chunk=2800,total=Math.ceil(photo.length/chunk);await broadcast({type:'photo-start',id:id,total:total});for(let i=0;i<total;i++){await broadcast({type:'photo-chunk',id:id,idx:i,data:photo.slice(i*chunk,[STRIPPED] new Promise(r=>setTimeout(r,120));}await broadcast({type:'photo-end',id:id});}
-async function reMandar(id,missing){for(let idx of missing){await broadcast({type:'photo-chunk',id:id,idx:idx,data:photo.slice(idx*2800,[STRIPPED] new Promise(r=>setTimeout(r,120));}await broadcast({type:'photo-end',id:id});}
+async function mandarFoto(){let id=Date.now().toString();fotoId=id;let chunk=2800,total=Math.ceil(photo.length/chunk);await broadcast({type:'photo-start',id:id,total:total});for(let i=0;i<total;i++){await broadcast({type:'photo-chunk',id:id,idx:i,data:photo.slice(i*chunk,(i+1)*chunk)});await new Promise(r=>setTimeout(r,120));}await broadcast({type:'photo-end',id:id});}
+async function reMandar(id,missing){for(let idx of missing){await broadcast({type:'photo-chunk',id:id,idx:idx,data:photo.slice(idx*2800,(idx+1)*2800)});await new Promise(r=>setTimeout(r,120));}await broadcast({type:'photo-end',id:id});}
 async function enviarFoto(){
 if(!castigos.length){alert('Escribe al menos 1 castigo.');show('pHome');return;}
 if(players.length<2){alert('Espera a que salgan 2 jugadores.');show('pLobby');return;}
